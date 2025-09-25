@@ -4,6 +4,9 @@
 PYTHON = python
 VENV = .venv/Scripts/activate
 
+# Set PYTHONPATH to include src and utils directories
+PYTHONPATH = $(shell cd)\\src;$(shell cd)\\utils
+
 # MLFLOW
 MLFLOW_PORT ?= 5000
 WORKERS = 1
@@ -37,6 +40,7 @@ install:
 clean:
 	@echo Cleaning up artifacts...
 	@if exist artifacts\models rmdir /s /q artifacts\models
+	@if exist artifacts\data rmdir /s /q artifacts\data
 	@if exist artifacts\evaluation rmdir /s /q artifacts\evaluation
 	@if exist artifacts\predictions rmdir /s /q artifacts\predictions
 	@if exist data\processed rmdir /s /q data\processed
@@ -52,17 +56,20 @@ clean:
 # Run data pipeline
 data-pipeline:
 	@echo Running data pipeline...
-	.venv\Scripts\activate && $(PYTHON) pipelines/data_pipeline.py
+	@echo Setting PYTHONPATH to include src and utils directories...
+	.venv\Scripts\activate && set PYTHONPATH=$(PYTHONPATH) && $(PYTHON) pipelines/data_pipeline.py
 
 # Run training pipeline
 train-pipeline:
 	@echo Running training pipeline...
-	.venv\Scripts\activate && $(PYTHON) pipelines/training_pipeline.py
+	@echo Setting PYTHONPATH to include src and utils directories...
+	.venv\Scripts\activate && set PYTHONPATH=$(PYTHONPATH) && $(PYTHON) pipelines/training_pipeline.py
 
 # Run streaming inference pipeline with sample JSON
 streaming-inference:
 	@echo Running streaming inference pipeline with sample JSON...
-	.venv\Scripts\activate && $(PYTHON) pipelines/streaming_inference_pipeline.py
+	@echo Setting PYTHONPATH to include src and utils directories...
+	.venv\Scripts\activate && set PYTHONPATH=$(PYTHONPATH) && $(PYTHON) pipelines/streaming_inference_pipeline.py
 
 # Run all pipelines in sequence
 run-all:
@@ -70,17 +77,17 @@ run-all:
 	@echo ========================================
 	@echo Step 1: Running data pipeline
 	@echo ========================================
-	.venv\Scripts\activate && $(PYTHON) pipelines/data_pipeline.py
+	.venv\Scripts\activate && set PYTHONPATH=$(PYTHONPATH) && $(PYTHON) pipelines/data_pipeline.py
 	@echo.
 	@echo ========================================
 	@echo Step 2: Running training pipeline
 	@echo ========================================
-	.venv\Scripts\activate && $(PYTHON) pipelines/training_pipeline.py
+	.venv\Scripts\activate && set PYTHONPATH=$(PYTHONPATH) && $(PYTHON) pipelines/training_pipeline.py
 	@echo.
 	@echo ========================================
 	@echo Step 3: Running streaming inference pipeline
 	@echo ========================================
-	.venv\Scripts\activate && $(PYTHON) pipelines/streaming_inference_pipeline.py
+	.venv\Scripts\activate && set PYTHONPATH=$(PYTHONPATH) && $(PYTHON) pipelines/streaming_inference_pipeline.py
 	@echo.
 	@echo ========================================
 	@echo All pipelines completed successfully!
