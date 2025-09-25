@@ -181,7 +181,7 @@ logging:
   file: "pipeline.log"
 
 mlflow:
-  tracking_url: "file:./mlruns"
+  tracking_uri: "file:./mlruns"
   experiment_name: "Telco Churn Analysis"
   model_registry_name: "Productionised Telco Churn Prediction System"
   artifact_path: "model"
