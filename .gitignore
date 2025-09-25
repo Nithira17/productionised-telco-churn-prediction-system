@@ -1,0 +1,31 @@
+# Ignore virtual environment folders
+.venv/
+venv/
+
+# Python cache files
+pipelines/__pycache__/
+src/__pycache__/
+utils/__pycache__/
+*.py[cod]
+*.pyo
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings
+.vscode/
+
+# Environment variables
+.env
+
+# Mac OS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+
+# Log files
+*.log
+
+# Ignore data/output folders (customize as needed)
+data/
