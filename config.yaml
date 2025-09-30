@@ -112,8 +112,9 @@ handle_imbalance:
   random_state: 42
 
 training:
-  default_model_type: "XGboost"
+  default_model_type: "CatBoost"
   default_training_strategy: "cv"
+  train_all_models: true  # NEW: Set to true to train all models and compare
   cv_folds: 5
   random_state: 42
   test_size: 0.2
@@ -121,21 +122,19 @@ training:
   early_stopping_patience: 10
   max_iterations: 1000
   hyperparameter_tuning:
-    enabled: false
-    search_method: "grid"
+    enabled: true
+    search_method: "randomized"  # Changed from "grid" to "randomized"
     cv_folds: 5
-    n_iter: 20
+    n_iter: 100  # Number of parameter settings sampled
 
 model:
-  model_type: "XGboost"
+  model_type: "CatBoost"
   training_strategy: "cv"
   data_path: "data/raw/telco-customer-dataset.xls"
-  model_path: "artifacts/models/xgboost_cv_model.joblib"
-  evaluation_path: "artifacts/evaluation/xgboost_cv_evaluation_report.txt"
-  model_params:
-    n_estimators: 100
-    max_depth: 10
-    random_state: 42
+  model_path: "artifacts/models/best_model.joblib"
+  evaluation_path: "artifacts/evaluation/evaluation_report.txt"
+  # Removed model_params to avoid conflicts with hyperparameter tuning
+  # Base params are now handled in training_pipeline.py
   model_types:
     random_forest:
       n_estimators: 100
@@ -160,20 +159,6 @@ evaluation:
     - "f1-score"
   cv_folds: 5
   random_state: 42
-
-# deployment:
-#   model_name: "churn_analysis_model"
-#   model_version: "1.0.0"
-#   api_endpoint: "/predict"
-#   batch_size: 1000
-
-# inference:
-#   model_name: "random_forest_cv_model"
-#   data_path: "artifacts/data/X_test.csv"
-#   sample_size: 100
-#   save_path: "artifacts/predictions/predictions.csv"
-#   batch_size: 1000
-#   return_proba: true
 
 logging:
   level: "INFO"
@@ -201,4 +186,3 @@ pipeline:
   deployment_pipeline_name: "model_deployment_pipeline"
   inference_pipeline_name: "inference_pipeline"
   enable_cache: false
-

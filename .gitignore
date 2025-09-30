@@ -34,3 +34,5 @@ mlruns/
 
 artifacts/data
 artifacts/models
+
+catboost_info/

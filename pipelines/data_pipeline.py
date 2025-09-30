@@ -199,7 +199,7 @@ def data_pipeline(
         }
     
     mlflow_tracker.log_data_pipeline_metrics(dataset_info)
-    # mlflow_tracker.end_run()
+    mlflow_tracker.end_run()
 
     return {
             "X_train": X_train_resampled,
@@ -207,7 +207,5 @@ def data_pipeline(
             "Y_train": Y_train_resampled,
             "Y_test": Y_test
         }
-
-    mlflow_tracker.end_run()
 
 data_pipeline()

@@ -103,6 +103,32 @@ class MLflowTracker:
         except Exception as e:
             logger.error(f"Error logging training metrics: {e}")
 
+    def log_params(self, params: Dict[str, Any]):
+        try:
+            mlflow.log_params(params)
+            logger.info("Logged parameters to MLflow")
+        except Exception as e:
+            logger.error(f"Error logging parameters: {e}")
+
+    def log_metrics(self, metrics: Dict[str, float]):
+        try:
+            mlflow.log_metrics(metrics)
+            logger.info("Logged metrics to MLflow")
+        except Exception as e:
+            logger.error(f"Error logging metrics: {e}")
+    
+    def log_param(self, key: str, value: Any):
+        try:
+            mlflow.log_param(key, value)
+        except Exception as e:
+            logger.error(f"Error logging parameter {key}: {e}")
+    
+    def log_metric(self, key: str, value: float):
+        try:
+            mlflow.log_metric(key, value)
+        except Exception as e:
+            logger.error(f"Error logging metric {key}: {e}")
+
     def log_evaluation_metrics(self, evaluation_metrics: Dict[str, Any], confusion_matrix_path: Optional[str] = None):
         try:
             if 'metrics' in evaluation_metrics:
