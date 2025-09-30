@@ -57,19 +57,19 @@ def get_handle_imbalance_config():
     config = load_config()
     return config.get('handle_imbalance', {})
 
-# def get_training_config():
-#     config = load_config()
-#     return config.get('training', {})
+def get_training_config():
+    config = load_config()
+    return config.get('training', {})
 
 
-# def get_model_config():
-#     config = load_config()
-#     return config.get('model', {})
+def get_model_config():
+    config = load_config()
+    return config.get('model', {})
 
 
-# def get_evaluation_config():
-#     config = load_config()
-#     return config.get('evaluation', {})
+def get_evaluation_config():
+    config = load_config()
+    return config.get('evaluation', {})
 
 
 # def get_deployment_config():

@@ -111,55 +111,55 @@ handle_imbalance:
   method: "smote"
   random_state: 42
 
-# training:
-#   default_model_type: "random_forest"
-#   default_training_strategy: "cv"
-#   cv_folds: 5
-#   random_state: 42
-#   test_size: 0.2
-#   validation_split: 0.2
-#   early_stopping_patience: 10
-#   max_iterations: 1000
-#   hyperparameter_tuning:
-#     enabled: false
-#     search_method: "grid"
-#     cv_folds: 5
-#     n_iter: 20
+training:
+  default_model_type: "XGboost"
+  default_training_strategy: "cv"
+  cv_folds: 5
+  random_state: 42
+  test_size: 0.2
+  validation_split: 0.2
+  early_stopping_patience: 10
+  max_iterations: 1000
+  hyperparameter_tuning:
+    enabled: false
+    search_method: "grid"
+    cv_folds: 5
+    n_iter: 20
 
-# model:
-#   model_type: "random_forest"
-#   training_strategy: "cv"
-#   data_path: "data/raw/ChurnModelling.csv"
-#   model_path: "artifacts/models/random_forest_cv_model.pkl"
-#   evaluation_path: "artifacts/evaluation/random_forest_cv_evaluation_report.txt"
-#   model_params:
-#     n_estimators: 100
-#     max_depth: 10
-#     random_state: 42
-#   model_types:
-#     random_forest:
-#       n_estimators: 100
-#       max_depth: 10
-#       random_state: 42
-#     gradient_boosting:
-#       n_estimators: 100
-#       max_depth: 5
-#       random_state: 42
-#     logistic_regression:
-#       random_state: 42
-#       max_iter: 1000
-#     svm:
-#       random_state: 42
-#       probability: true
+model:
+  model_type: "XGboost"
+  training_strategy: "cv"
+  data_path: "data/raw/telco-customer-dataset.xls"
+  model_path: "artifacts/models/xgboost_cv_model.joblib"
+  evaluation_path: "artifacts/evaluation/xgboost_cv_evaluation_report.txt"
+  model_params:
+    n_estimators: 100
+    max_depth: 10
+    random_state: 42
+  model_types:
+    random_forest:
+      n_estimators: 100
+      max_depth: 10
+      random_state: 42
+    gradient_boosting:
+      n_estimators: 100
+      max_depth: 5
+      random_state: 42
+    logistic_regression:
+      random_state: 42
+      max_iter: 1000
+    svm:
+      random_state: 42
+      probability: true
 
-# evaluation:
-#   metrics:
-#     - "accuracy"
-#     - "precision"
-#     - "recall"
-#     - "f1-score"
-#   cv_folds: 5
-#   random_state: 42
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1-score"
+  cv_folds: 5
+  random_state: 42
 
 # deployment:
 #   model_name: "churn_analysis_model"
