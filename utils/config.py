@@ -61,24 +61,21 @@ def get_training_config():
     config = load_config()
     return config.get('training', {})
 
-
 def get_model_config():
     config = load_config()
     return config.get('model', {})
-
 
 def get_evaluation_config():
     config = load_config()
     return config.get('evaluation', {})
 
+def get_deployment_config():
+    config = load_config()
+    return config.get('deployment', {})
 
-# def get_deployment_config():
-#     config = load_config()
-#     return config.get('deployment', {})
-
-# def get_inference_config():
-#     config = load_config()
-#     return config.get('inference', {})
+def get_inference_config():
+    config = load_config()
+    return config.get('inference', {})
 
 def get_logging_config():
     config = load_config()

@@ -80,7 +80,6 @@ def training_pipeline(data_path = 'data/raw/telco-customer-dataset.xls',
                       use_hyperparameter_tuning = False,
                       model_type = 'XGboost'):
     
-    # Ensure any previous MLflow run is ended
     try:
         mlflow.end_run()
     except:
@@ -195,10 +194,6 @@ def training_pipeline(data_path = 'data/raw/telco-customer-dataset.xls',
     return model, evaluation_results
 
 def train_all_models(use_cv=False, use_hyperparameter_tuning=True):
-    """
-    Train all available models and compare their performance
-    """
-    # Use correct case-sensitive model names matching your builders
     model_types = ['XGboost', 'LightGBM', 'CatBoost']
     results = {}
     
@@ -241,7 +236,6 @@ def train_all_models(use_cv=False, use_hyperparameter_tuning=True):
                 'error': str(e)
             }
     
-    # Find best model based on F1 score
     best_model_name = None
     best_f1_score = -1
     
@@ -269,12 +263,10 @@ def train_all_models(use_cv=False, use_hyperparameter_tuning=True):
         else:
             logger.warning(f"{model_name} failed with error: {result['error']}")
     
-    # Check if we have any successful results
     if not comparison_df:
         logger.error("All models failed to train! Check the errors above.")
         return results, None
     
-    # Display comparison table
     comparison_df = pd.DataFrame(comparison_df)
     comparison_df = comparison_df.sort_values('F1 Score', ascending=False)
     print("\n" + comparison_df.to_string(index=False))
@@ -286,7 +278,6 @@ def train_all_models(use_cv=False, use_hyperparameter_tuning=True):
         logger.info(f"   Model Path: {results[best_model_name]['model_path']}")
         logger.info(f"{'='*80}\n")
         
-        # Save comparison results
         os.makedirs('artifacts/evaluation', exist_ok=True)
         comparison_df.to_csv('artifacts/evaluation/model_comparison.csv', index=False)
         logger.info("Model comparison saved to: artifacts/evaluation/model_comparison.csv")
@@ -297,11 +288,9 @@ def train_all_models(use_cv=False, use_hyperparameter_tuning=True):
 if __name__ == '__main__':
     training_config = get_training_config()
     
-    # Check if we want to train all models
-    train_all = training_config.get('train_all_models', True)
+    train_all = training_config.get('train_all_models', False)
     
     if train_all:
-        # Train and compare all models
         use_cv = training_config['default_training_strategy'] == 'cv'
         use_hyperparameter_tuning = training_config.get('hyperparameter_tuning', {}).get('enabled', False)
         
@@ -310,7 +299,6 @@ if __name__ == '__main__':
             use_hyperparameter_tuning=use_hyperparameter_tuning
         )
     else:
-        # Train single model as before
         use_cv = training_config['default_training_strategy'] == 'cv'
         use_hyperparameter_tuning = training_config.get('hyperparameter_tuning', {}).get('enabled')
         model_type = training_config['default_model_type']

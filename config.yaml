@@ -125,7 +125,7 @@ training:
     enabled: true
     search_method: "randomized"  # Changed from "grid" to "randomized"
     cv_folds: 5
-    n_iter: 100  # Number of parameter settings sampled
+    n_iter: 100  
 
 model:
   model_type: "CatBoost"
@@ -133,8 +133,6 @@ model:
   data_path: "data/raw/telco-customer-dataset.xls"
   model_path: "artifacts/models/best_model.joblib"
   evaluation_path: "artifacts/evaluation/evaluation_report.txt"
-  # Removed model_params to avoid conflicts with hyperparameter tuning
-  # Base params are now handled in training_pipeline.py
   model_types:
     random_forest:
       n_estimators: 100
@@ -159,6 +157,20 @@ evaluation:
     - "f1-score"
   cv_folds: 5
   random_state: 42
+
+deployment:
+  model_name: "productionised_telco_churn_prediction_model"
+  model_version: "1.0.0"
+  api_endpoint: "/predict"
+  batch_size: 1000
+
+inference:
+  model_name: "random_forest_cv_model"
+  data_path: "artifacts/data/X_test.csv"
+  sample_size: 100
+  save_path: "artifacts/predictions/predictions.csv"
+  batch_size: 1000
+  return_proba: true
 
 logging:
   level: "INFO"
