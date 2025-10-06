@@ -24,6 +24,11 @@ help:
 	@echo   make run-all             - Run all pipelines in sequence
 	@echo   make mlflow-ui           - Launch the MLflow UI on localhost:$(MLFLOW_PORT)
 	@echo   make clean               - Clean up artifacts
+	@echo   make sync-dags-to-wsl    - Sync DAG files from Windows to WSL2 Airflow
+	@echo   make airflow-start-wsl   - Start Airflow in WSL2
+	@echo   make airflow-status      - Check if Airflow is running
+	@echo   make airflow-stop-wsl    - Stop Airflow in WSL2
+	@echo   make airflow-deploy      - Deploy DAGs to WSL2 Airflow
 
 # Install project dependencies and set up environment
 install:
@@ -105,3 +110,37 @@ stop-all:
 	@echo Stopping all MLflow servers on port $(MLFLOW_PORT)...
 	@for /f "tokens=5" %%a in ('netstat -ano ^| findstr :$(MLFLOW_PORT)') do taskkill /PID %%a /F >nul 2>&1
 	@echo All MLflow servers on port $(MLFLOW_PORT) have been stopped!
+
+# Sync DAGs from Windows to WSL2
+sync-dags-to-wsl:
+	@echo Syncing DAGs from Windows to WSL2...
+	@wsl -d Ubuntu mkdir -p /home/nithira17/airflow-class/.airflow/dags/
+	@if exist dags for %%f in (dags\*.py) do wsl -d Ubuntu cp "/mnt/c/Users/hewaj/Desktop/Zuu Crew/Customer Churn Prediction - AirFlow/dags/%%~nxf" "/home/nithira17/airflow-class/.airflow/dags/"
+	@echo DAGs synced successfully!
+	@echo Access Airflow UI at: http://localhost:8080
+
+# Start Airflow in WSL2 (opens new terminal)
+airflow-start-wsl:
+	@echo Starting Airflow in WSL2...
+	@echo This will open a new WSL2 terminal window
+	wsl -d Ubuntu -e bash -c "cd ~/airflow-class && source .venv/bin/activate && ./start_airflow.sh"
+
+# Check if Airflow is running
+airflow-status:
+	@echo Checking Airflow status...
+	@curl -s http://localhost:8080/health || echo Airflow is not running
+	@echo.
+	@echo If running, access at: http://localhost:8080
+
+# Stop Airflow (kills WSL2 processes)
+airflow-stop-wsl:
+	@echo Stopping Airflow in WSL2...
+	@wsl -d Ubuntu pkill -f airflow || echo No Airflow processes found
+	@echo Airflow stopped.
+
+# Complete Airflow workflow
+airflow-deploy:
+	@echo Deploying to Airflow...
+	@$(MAKE) sync-dags-to-wsl
+	@echo DAGs deployed! Start Airflow with: make airflow-start-wsl
+	@echo Or manually run in WSL2: cd ~/airflow-class && ./start_airflow.sh

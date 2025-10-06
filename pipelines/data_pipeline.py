@@ -1,3 +1,4 @@
+import json
 import os
 import logging
 import pandas as pd
@@ -230,6 +231,14 @@ def data_pipeline(
     outlier_detector = OutlierDetector(strategy=IQROutlierDetector(spark=spark))
     df = outlier_detector.handle_outliers(df, selected_columns=columns['numerical_columns'])
     outliers_removed = initial_count - df.count()
+
+    # DROP outlier indicator columns after filtering
+    outlier_cols = [f"{col}_outlier" for col in columns['numerical_columns']]
+    existing_outlier_cols = [col for col in outlier_cols if col in df.columns]
+    if existing_outlier_cols:
+        df = df.drop(*existing_outlier_cols)
+        logger.info(f"Dropped outlier indicator columns: {existing_outlier_cols}")
+        
     log_stage_metrics(df, 'outliers_handled', {'outliers_removed': outliers_removed}, spark=spark)
 
     print('\n---------------------------Step 5: Feature Binning-------------------------------------')
@@ -246,6 +255,14 @@ def data_pipeline(
     df = nominal_encoder.encode(df)
     df = ordinal_encoder.encode(df)
     log_stage_metrics(df, 'encoded', spark=spark)
+
+    # Save nominal encoders for inference
+    logger.info("Saving nominal encoders for inference...")
+    for column, encoder_dict in nominal_encoder.get_encoder_dicts().items():
+        encoder_path = f'artifacts/encode/{column}_encoder.json'
+        with open(encoder_path, 'w') as f:
+            json.dump(encoder_dict, f)
+    logger.info("Nominal encoders saved")
 
     print('\n---------------------------Step 7: Feature Scaling-------------------------------------')
     robust_scaling_strategy = RobustScalingStrategy(spark=spark)

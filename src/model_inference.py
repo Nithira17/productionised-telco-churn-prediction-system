@@ -4,9 +4,9 @@ import os
 import joblib
 import pandas as pd
 import numpy as np
-from feature_encoding import BinaryFeatureEncodingStrategy, NominalEncodingStrategy, OrdinalEncodingStrategy
-from feature_engineering import ConvertingToNumeric, NoServiceToNO, CommunicationTypeCreation, TotalInternetServicesCreation
-from feature_binning import CustomBinningStrategy
+from feature_encoding_pandas import BinaryFeatureEncodingStrategy, NominalEncodingStrategy, OrdinalEncodingStrategy
+from feature_engineering_pandas import ConvertingToNumeric, NoServiceToNO, CommunicationTypeCreation, TotalInternetServicesCreation
+from feature_binning_pandas import CustomBinningStrategy
 from config import get_columns, get_feature_binning_config, get_feature_encoding_config, get_feature_engineering_config, get_feature_scaling_config
 
 logging.basicConfig(level=logging.INFO, format=
